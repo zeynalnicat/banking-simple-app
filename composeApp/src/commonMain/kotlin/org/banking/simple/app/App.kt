@@ -15,6 +15,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.cmppreference.LocalPreference
+import com.example.cmppreference.LocalPreferenceProvider
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.banking.simple.app.core.DaoHolder
@@ -28,45 +30,48 @@ import org.banking.simple.app.navigation.TopLevelRoute
 fun App(daoHolder: DaoHolder) {
     val navController = rememberNavController()
 
-    val topLevelRoutes = listOf(
-        TopLevelRoute(Screen.Dashboard.route, "Dashboard", Icons.Default.Home),
-        TopLevelRoute(Screen.Profile.route, "Profile", Icons.Default.AccountBox)
-    )
+    LocalPreferenceProvider {
+        val preference = LocalPreference.current
+        val topLevelRoutes = listOf(
+            TopLevelRoute(Screen.Dashboard.route, "Dashboard", Icons.Default.Home),
+            TopLevelRoute(Screen.Profile.route, "Profile", Icons.Default.AccountBox)
+        )
 
-    val currentBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = currentBackStackEntry?.destination?.route
+        val currentBackStackEntry by navController.currentBackStackEntryAsState()
+        val currentRoute = currentBackStackEntry?.destination?.route
 
-    val isUserLoggedIn = remember { mutableStateOf(false) }
+        val isUserLoggedIn =preference.getString("username")
 
-    MaterialTheme {
-        Scaffold(
-            bottomBar = {
-                if (isUserLoggedIn.value && currentRoute !in listOf(Screen.Auth.route)) {
-                    NavigationBar {
-                        topLevelRoutes.forEach { route ->
-                            val selected = currentRoute == route.route
-                            NavigationBarItem(
-                                icon = { Icon(route.icon, contentDescription = route.name) },
-                                label = { Text(route.name) },
-                                selected = selected,
-                                onClick = {
-                                    if (!selected) {
-                                        navController.navigate(route.route) {
-                                            popUpTo(navController.graph.startDestinationId) {
-                                                saveState = true
+        MaterialTheme {
+            Scaffold(
+                bottomBar = {
+                    if (isUserLoggedIn!=null && currentRoute !in listOf(Screen.Auth.route)) {
+                        NavigationBar {
+                            topLevelRoutes.forEach { route ->
+                                val selected = currentRoute == route.route
+                                NavigationBarItem(
+                                    icon = { Icon(route.icon, contentDescription = route.name) },
+                                    label = { Text(route.name) },
+                                    selected = selected,
+                                    onClick = {
+                                        if (!selected) {
+                                            navController.navigate(route.route) {
+                                                popUpTo(navController.graph.startDestinationId) {
+                                                    saveState = true
+                                                }
+                                                launchSingleTop = true
+                                                restoreState = true
                                             }
-                                            launchSingleTop = true
-                                            restoreState = true
                                         }
                                     }
-                                }
-                            )
+                                )
+                            }
                         }
                     }
                 }
+            ) { innerPadding ->
+                AppNavigator(innerPadding, navController, daoHolder)
             }
-        ) { innerPadding ->
-            AppNavigator(innerPadding, navController, daoHolder)
         }
     }
 }

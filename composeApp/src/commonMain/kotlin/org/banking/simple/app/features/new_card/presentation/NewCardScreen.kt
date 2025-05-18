@@ -24,9 +24,10 @@ import org.banking.simple.app.features.dashboard.presentation.components.CardSec
 import org.banking.simple.app.features.new_card.NewCardIntent
 import org.banking.simple.app.features.new_card.data.NewCardRepositoryImpl
 import org.banking.simple.app.features.new_card.domain.AddCardUseCase
-import org.banking.simple.app.features.shared.ui.components.DTextField
 import org.banking.simple.app.features.shared.ui.colors.AppColors
-import org.banking.simple.app.features.shared.ui.components.DButton
+import org.banking.simple.app.features.shared.ui.components.BankButton
+import org.banking.simple.app.features.shared.ui.components.BankTextField
+
 import org.banking.simple.app.features.shared.ui.components.DSizedBox
 import org.banking.simple.app.features.shared.ui.components.TopBar
 
@@ -81,14 +82,14 @@ fun NewCardScreen(navController: NavController,cardDao: CardDao) {
             }
 
             DSizedBox.sixteenH()
-            DTextField(value = state.cardName, onValueChanged = {viewModel.onIntent(NewCardIntent.OnUpdateCardName(it))} , placeHolder = "Enter card name", label = "Card Name" )
+            BankTextField(value = state.cardName, onValueChange = {viewModel.onIntent(NewCardIntent.OnUpdateCardName(it))} , placeholder = "Enter card name", label = "Card Name" )
             DSizedBox.sixteenH()
-            DTextField(value = state.initialDeposit , onValueChanged ={ viewModel.onIntent(
-                NewCardIntent.OnUpdateInitialDeposit(it))} , placeHolder = "Initial Deposit", label = "Initial Deposit")
+            BankTextField(value = state.initialDeposit , onValueChange ={ viewModel.onIntent(
+                NewCardIntent.OnUpdateInitialDeposit(it))} , placeholder = "Initial Deposit", label = "Initial Deposit")
 
             DSizedBox.twentyFourH()
 
-            DButton({viewModel.onIntent(NewCardIntent.OnSave)},"Save")
+            BankButton({viewModel.onIntent(NewCardIntent.OnSave)},"Save")
         }
     }
 }

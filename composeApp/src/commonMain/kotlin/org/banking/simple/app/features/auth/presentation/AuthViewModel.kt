@@ -42,6 +42,7 @@ class AuthViewModel(private val authUseCase: AuthUseCase): ViewModel() {
                 }
                 is Result.Error -> {
                     println("Error: ${result.message}")
+                    navigate()
                 }
                 is Result.Loading -> {
 
