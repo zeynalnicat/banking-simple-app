@@ -19,7 +19,6 @@ class NewCardViewModel(private val addCardUseCase: AddCardUseCase) : ViewModel()
     private val _state = MutableStateFlow(NewCardState())
     val state: StateFlow<NewCardState> = _state.asStateFlow()
 
-
     fun onIntent(intent: NewCardIntent){
         when(intent){
             NewCardIntent.OnSave -> createCard(CardEntity(0,state.value.cardName,0,state.value.initialDeposit.toInt(),state.value.cardColor.toString()))

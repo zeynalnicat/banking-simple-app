@@ -1,4 +1,4 @@
-package org.banking.simple.app.features.new_card.presentation.components
+package org.banking.simple.app.features.shared.ui.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,7 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import org.banking.simple.app.features.shared.ui.components.DSizedBox
 
 
 @Composable

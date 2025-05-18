@@ -13,7 +13,7 @@ interface CardDao {
     suspend fun createCard(cardEntity: CardEntity):Long
 
 
-    @Query("Select * from card where userId=:userId")
+    @Query("SELECT * FROM cards where userId=:userId")
     suspend fun getUserCards(userId: Int): List<CardEntity>
 
 

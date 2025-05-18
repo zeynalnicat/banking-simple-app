@@ -1,7 +1,6 @@
 @file:OptIn(InternalCoroutinesApi::class)
 
 
-import AppDatabase
 import android.content.Context
 
 import androidx.room.Room
@@ -9,7 +8,7 @@ import androidx.room.Room
 
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import kotlinx.coroutines.InternalCoroutinesApi
-
+import org.banking.simple.app.core.data.local.AppDatabase
 
 
 fun getDatabaseBuilder(ctx: Context): AppDatabase {
