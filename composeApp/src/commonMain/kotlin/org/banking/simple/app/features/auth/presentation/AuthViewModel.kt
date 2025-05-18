@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.banking.simple.app.core.data.Result
 import org.banking.simple.app.features.auth.domain.AuthUseCase
 import org.banking.simple.app.features.auth.domain.UserEntity
 import org.banking.simple.app.features.new_card.presentation.NewCardState
@@ -21,7 +22,7 @@ class AuthViewModel(private val authUseCase: AuthUseCase): ViewModel() {
         when(authIntent){
             is AuthIntent.OnSaveName -> saveName(authIntent.name)
             is AuthIntent.OnSavePin -> savePin(authIntent.pin)
-            AuthIntent.OnSubmit -> TODO()
+            is AuthIntent.OnSubmit -> submit(authIntent.navigate)
         }
     }
 
@@ -33,11 +34,21 @@ class AuthViewModel(private val authUseCase: AuthUseCase): ViewModel() {
         _state.update { it.copy(pin=pin) }
     }
 
-    private fun submit(){
+    private fun submit(navigate:()->Unit){
         viewModelScope.launch {
-            authUseCase(UserEntity(0,state.value.name,state.value.pin))
+            when (val result = authUseCase.invoke(UserEntity(0, state.value.name, state.value.pin))) {
+                is Result.Success -> {
+                    navigate()
+                }
+                is Result.Error -> {
+                    println("Error: ${result.message}")
+                }
+                is Result.Loading -> {
+
+                }
+            }
+        }
+
         }
 
     }
-
-}

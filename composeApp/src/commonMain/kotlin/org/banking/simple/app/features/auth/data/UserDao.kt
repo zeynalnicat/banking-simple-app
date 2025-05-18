@@ -1,4 +1,4 @@
-package org.banking.app.features.auth.data
+package org.banking.simple.app.features.auth.data
 
 import androidx.room.Dao
 import androidx.room.Insert

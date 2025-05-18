@@ -17,10 +17,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
-
-import bankingsimpleapp.composeapp.generated.resources.Res
-import bankingsimpleapp.composeapp.generated.resources.compose_multiplatform
-import com.example.cmppreference.LocalPreferenceProvider
 import org.banking.simple.app.core.DaoHolder
 import org.banking.simple.app.core.Screen
 import org.banking.simple.app.features.dashboard.data.local.CardDao

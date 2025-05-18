@@ -10,7 +10,6 @@ import androidx.navigation.compose.composable
 import org.banking.simple.app.core.DaoHolder
 import org.banking.simple.app.core.Screen
 import org.banking.simple.app.features.auth.presentation.AuthScreen
-import org.banking.simple.app.features.dashboard.data.local.CardDao
 import org.banking.simple.app.features.dashboard.presentation.DashboardScreen
 import org.banking.simple.app.features.new_card.presentation.NewCardScreen
 import org.banking.simple.app.features.profile.presentation.ProfileScreen
@@ -28,6 +27,6 @@ fun AppNavigator(innerPadding: PaddingValues, navController: NavHostController,d
         composable ( Screen.Transfer.route)  { TransferScreen(navController) }
         composable (Screen.NewCard.route) { NewCardScreen(navController,daoHolder.cardDao) }
         composable (Screen.Profile.route ) {ProfileScreen()}
-        composable (Screen.Auth.route) { AuthScreen(daoHolder.userDao) }
+        composable (Screen.Auth.route) { AuthScreen(daoHolder.userDao,navController) }
     }
 }

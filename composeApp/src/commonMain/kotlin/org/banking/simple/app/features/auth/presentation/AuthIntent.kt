@@ -4,5 +4,5 @@ sealed class AuthIntent {
 
     data class OnSaveName( val name:String): AuthIntent()
     data class OnSavePin( val pin:String): AuthIntent()
-    object OnSubmit: AuthIntent()
+    data class OnSubmit(val navigate : ()->Unit ): AuthIntent()
 }

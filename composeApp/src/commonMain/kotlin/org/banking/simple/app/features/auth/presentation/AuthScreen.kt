@@ -11,7 +11,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import org.banking.app.features.auth.data.UserDao
+import androidx.navigation.NavController
+import org.banking.simple.app.core.Screen
+import org.banking.simple.app.features.auth.data.UserDao
 import org.banking.simple.app.features.auth.data.AuthRepositoryImpl
 import org.banking.simple.app.features.auth.domain.AuthUseCase
 import org.banking.simple.app.features.shared.ui.components.DButton
@@ -20,7 +22,7 @@ import org.banking.simple.app.features.shared.ui.components.DSizedBox
 
 
 @Composable
-fun AuthScreen(userDao: UserDao){
+fun AuthScreen(userDao: UserDao,navController: NavController){
 
     val viewModel = viewModel { AuthViewModel(AuthUseCase(AuthRepositoryImpl(userDao))) }
     val state = viewModel.state.collectAsState().value
@@ -35,7 +37,21 @@ fun AuthScreen(userDao: UserDao){
             DSizedBox.sixteenH()
             DTextField(value = state.pin, onValueChanged = {viewModel.onIntent(AuthIntent.OnSavePin(it))}, label = "Your pin", placeHolder = "Enter your pin")
             DSizedBox.twentyFourH()
-            DButton({viewModel.onIntent(AuthIntent.OnSubmit)},"Submit")
+            DButton(
+                onClick = {
+                    viewModel.onIntent(
+                        AuthIntent.OnSubmit(
+                            navigate = {
+                                navController.navigate(Screen.Dashboard.route) {
+                                    popUpTo(Screen.Auth.route) { inclusive = true }
+                                }
+                            }
+                        )
+                    )
+                },
+                "Submit"
+            )
+
 
         }
     }
