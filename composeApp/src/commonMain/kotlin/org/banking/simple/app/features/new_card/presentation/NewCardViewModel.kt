@@ -21,7 +21,7 @@ class NewCardViewModel(private val addCardUseCase: AddCardUseCase) : ViewModel()
 
     fun onIntent(intent: NewCardIntent){
         when(intent){
-            NewCardIntent.OnSave -> createCard(CardEntity(0,state.value.cardName,0,state.value.initialDeposit.toInt(),state.value.cardColor.toString()))
+            NewCardIntent.OnSave -> createCard(CardEntity(0,state.value.cardName,0,state.value.initialDeposit.toInt(),state.value.cardColor.toString(),"1234"))
             is NewCardIntent.OnUpdateCardColor -> setCardColor(intent.color)
             is NewCardIntent.OnUpdateCardName -> setCardName(intent.cardName)
             is NewCardIntent.OnUpdateInitialDeposit -> setInitialDeposit(intent.deposit)

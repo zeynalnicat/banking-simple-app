@@ -25,5 +25,6 @@ data class CardEntity(
     var cardName: String,
     var userId : Int,
     var balance: Int = 0,
-    var cardColor: String
+    var cardColor: String,
+    var lastDigits: String,
 )

@@ -27,21 +27,34 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import org.banking.simple.app.features.dashboard.domain.CardEntity
 import org.banking.simple.app.features.dashboard.presentation.components.CardSection
 import org.banking.simple.app.features.dashboard.presentation.components.HeaderSection
+import org.banking.simple.app.features.dashboard.presentation.components.HorizontalCardList
 import org.banking.simple.app.features.dashboard.presentation.components.RecentActivities
+import org.banking.simple.app.features.shared.ui.colors.AppColors
+import org.banking.simple.app.features.shared.ui.components.DSizedBox
 
 
 @Composable
 
 fun DashboardScreen(navController: NavController){
+
+    val myCards = listOf(
+        CardEntity(0, "Nijat Zeynalli",0,400, "","1234"),
+        CardEntity(1, "John Doe",1,500, "","5678"),
+        CardEntity(0, "Jane Roe",0,21, "","9012"),
+
+
+    )
     Scaffold { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize().padding( 16.dp)
         ) {
             HeaderSection(navController)
-            CardSection(name = "Nijat Zeynalli", lastDigits = "0421", navController = navController)
+            HorizontalCardList(cards = myCards, navController = navController)
+            DSizedBox.twentyFourH()
             RecentActivities()
         }
     }
