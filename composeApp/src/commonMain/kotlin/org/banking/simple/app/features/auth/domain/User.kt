@@ -1,0 +1,2 @@
+package org.banking.simple.app.features.auth.domain
+
