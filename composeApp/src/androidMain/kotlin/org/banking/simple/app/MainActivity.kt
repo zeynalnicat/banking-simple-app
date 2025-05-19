@@ -15,9 +15,11 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         AppContext.apply { set(this@MainActivity) }
-        val cardDao = getDatabaseBuilder(applicationContext).cardDao()
-        val userDao = getDatabaseBuilder(applicationContext).userDao()
-        val daoHolder = DaoHolder(cardDao,userDao)
+        val db =  getDatabaseBuilder(applicationContext)
+        val cardDao = db.cardDao()
+        val userDao = db.userDao()
+        val transactionDao = db.transactionDao()
+        val daoHolder = DaoHolder(cardDao,userDao,transactionDao)
         setContent {
             App(daoHolder)
         }

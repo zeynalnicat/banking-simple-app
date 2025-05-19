@@ -21,13 +21,19 @@ import androidx.compose.material.icons.filled.Restaurant
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.vector.ImageVector
 
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import org.banking.simple.app.features.dashboard.data.DashboardRepositoryImpl
+import org.banking.simple.app.features.dashboard.data.local.TransactionDao
+import org.banking.simple.app.features.dashboard.domain.AddTransactionUseCase
 import org.banking.simple.app.features.dashboard.domain.CardEntity
+import org.banking.simple.app.features.dashboard.domain.GetTransactionUseCase
 import org.banking.simple.app.features.dashboard.presentation.components.CardSection
 import org.banking.simple.app.features.dashboard.presentation.components.HeaderSection
 import org.banking.simple.app.features.dashboard.presentation.components.HorizontalCardList
@@ -38,7 +44,11 @@ import org.banking.simple.app.features.shared.ui.components.DSizedBox
 
 @Composable
 
-fun DashboardScreen(navController: NavController){
+fun DashboardScreen(navController: NavController,transactionDao: TransactionDao){
+    val repoImpl = DashboardRepositoryImpl(transactionDao)
+    val viewModel = viewModel{ DashboardViewModel(AddTransactionUseCase(repoImpl),
+        GetTransactionUseCase(repoImpl)) }
+    val state = viewModel.state.collectAsState().value
 
     val myCards = listOf(
         CardEntity(0, "Nijat Zeynalli",0,400, "","1234"),
