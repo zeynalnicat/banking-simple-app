@@ -18,5 +18,8 @@ interface UserDao {
     @Query("SELECT EXISTS(SELECT 1 FROM users WHERE pin = :pin)")
     suspend fun enterPin(pin: String): Boolean
 
+    @Query("Select * from users where id=:userId")
+    suspend fun getUser(userId:Int): UserEntity
+
 
 }
