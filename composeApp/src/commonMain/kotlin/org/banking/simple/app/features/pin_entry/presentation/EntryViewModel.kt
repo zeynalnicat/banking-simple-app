@@ -30,7 +30,7 @@ class EntryViewModel(private val getUsernameUseCase: GetUsernameUseCase,private 
 
    private fun handleNumberPress(number: String,nav:()->Unit) {
        _state.update { it.copy(error = "") }
-        if (_state.value.currentIndex <= 6) {
+        if (_state.value.currentIndex < 6) {
             val newPin = _state.value.pin.toMutableList()
             newPin[_state.value.currentIndex] = number
             _state.update { it.copy(pin = newPin, currentIndex = _state.value.currentIndex+1) }
