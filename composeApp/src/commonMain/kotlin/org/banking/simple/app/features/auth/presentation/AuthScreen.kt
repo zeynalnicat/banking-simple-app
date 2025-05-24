@@ -42,6 +42,8 @@ fun AuthScreen(userDao: UserDao, navController: NavController) {
 
         if(preference.getInt("userId",-1)!=-1){
             navController.navigate(Screen.Entry.route)
+            {popUpTo(Screen.Auth.route) { inclusive = true }
+        }
         }else{
             Scaffold(
                 containerColor = MaterialTheme.colorScheme.background

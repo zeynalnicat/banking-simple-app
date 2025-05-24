@@ -21,6 +21,7 @@ import androidx.compose.material.icons.filled.Restaurant
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -29,43 +30,49 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.cmppreference.LocalPreference
+import com.example.cmppreference.LocalPreferenceProvider
 import org.banking.simple.app.features.dashboard.data.DashboardRepositoryImpl
+import org.banking.simple.app.features.dashboard.data.local.CardDao
 import org.banking.simple.app.features.dashboard.data.local.TransactionDao
-import org.banking.simple.app.features.dashboard.domain.AddTransactionUseCase
-import org.banking.simple.app.features.dashboard.domain.CardEntity
-import org.banking.simple.app.features.dashboard.domain.GetTransactionUseCase
-import org.banking.simple.app.features.dashboard.presentation.components.CardSection
+import org.banking.simple.app.features.dashboard.domain.usecases.AddTransactionUseCase
+
+import org.banking.simple.app.features.dashboard.domain.usecases.GetCardsUseCase
+import org.banking.simple.app.features.dashboard.domain.usecases.GetTransactionsUseCase
+
 import org.banking.simple.app.features.dashboard.presentation.components.HeaderSection
 import org.banking.simple.app.features.dashboard.presentation.components.HorizontalCardList
 import org.banking.simple.app.features.dashboard.presentation.components.RecentActivities
-import org.banking.simple.app.features.shared.ui.colors.AppColors
 import org.banking.simple.app.features.shared.ui.components.DSizedBox
 
 
 @Composable
 
-fun DashboardScreen(navController: NavController,transactionDao: TransactionDao){
-    val repoImpl = DashboardRepositoryImpl(transactionDao)
-    val viewModel = viewModel{ DashboardViewModel(AddTransactionUseCase(repoImpl),
-        GetTransactionUseCase(repoImpl)) }
+fun DashboardScreen(navController: NavController,transactionDao: TransactionDao,cardDao: CardDao){
+    val repoImpl = DashboardRepositoryImpl(transactionDao,cardDao)
+    val getTransactionUseCase =  GetTransactionsUseCase(repoImpl)
+    val getCardsUseCase = GetCardsUseCase(repoImpl)
+
+    val viewModel = viewModel{ DashboardViewModel(
+        getTransactionUseCase,getCardsUseCase) }
     val state = viewModel.state.collectAsState().value
+    LocalPreferenceProvider {
+        val preference = LocalPreference.current
+        LaunchedEffect(Unit) {
+            viewModel.onIntent(DashboardIntent.OnGetCards(preference.getInt("userId",-1)))
+            viewModel.onIntent(DashboardIntent.OnGetTransactionHistory(preference.getInt("userId",-1)))
+        }
 
-    val myCards = listOf(
-        CardEntity(0, "Nijat Zeynalli",0,400, "","1234"),
-        CardEntity(1, "John Doe",1,500, "","5678"),
-        CardEntity(0, "Jane Roe",0,21, "","9012"),
-
-
-    )
-    Scaffold { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize().padding( 16.dp)
-        ) {
-            HeaderSection(navController)
-            HorizontalCardList(cards = myCards, navController = navController)
-            DSizedBox.twentyFourH()
-            RecentActivities()
+        Scaffold { innerPadding ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize().padding(16.dp)
+            ) {
+                HeaderSection(navController)
+                HorizontalCardList(cards = state.cards, navController = navController)
+                DSizedBox.twentyFourH()
+                RecentActivities(state.transactionHistory)
+            }
         }
     }
 
@@ -108,25 +115,4 @@ fun ActionItem(icon: ImageVector, label: String) {
 
 
 
-@Composable
-fun ActivityItem() {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Box(
-            modifier = Modifier
-                .size(40.dp)
-                .background(Color(0xFF181F3A), shape = RoundedCornerShape(8.dp)),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(Icons.Default.Restaurant, contentDescription = null, tint = Color.White)
-        }
-        Spacer(modifier = Modifier.width(12.dp))
-        Column(modifier = Modifier.weight(1f)) {
-            Text("Food", color = Color.Black, fontSize = 14.sp)
-            Text("15 Oct 2020", color = Color.Black.copy(alpha = 0.6f), fontSize = 12.sp)
-        }
-        Text("- \$ 40,00", color = Color.Black, fontSize = 14.sp)
-    }
-}
+

@@ -1,4 +1,4 @@
-package org.banking.simple.app.features.dashboard.domain
+package org.banking.simple.app.features.dashboard.domain.entities
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
@@ -18,7 +18,7 @@ data class TransactionHistory(
     var userId: Int,
     var total : Int ,
     var isExpense: Boolean,
-    var type: TransactionType,
+    var type: String,
 )
 
 

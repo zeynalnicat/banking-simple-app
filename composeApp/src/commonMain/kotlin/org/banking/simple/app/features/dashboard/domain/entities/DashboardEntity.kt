@@ -1,4 +1,4 @@
-package org.banking.simple.app.features.dashboard.domain
+package org.banking.simple.app.features.dashboard.domain.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

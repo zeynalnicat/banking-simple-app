@@ -8,10 +8,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.banking.simple.app.features.dashboard.domain.CardEntity
-import org.banking.simple.app.features.new_card.presentation.NewCardIntent
+import org.banking.simple.app.core.data.Result
+import org.banking.simple.app.features.dashboard.domain.models.CardDTO
+import org.banking.simple.app.features.dashboard.domain.entities.CardEntity
 import org.banking.simple.app.features.new_card.domain.AddCardUseCase
-import org.banking.simple.app.features.new_card.domain.NewCardRepository
 
 class NewCardViewModel(private val addCardUseCase: AddCardUseCase) : ViewModel(){
 
@@ -21,7 +21,7 @@ class NewCardViewModel(private val addCardUseCase: AddCardUseCase) : ViewModel()
 
     fun onIntent(intent: NewCardIntent){
         when(intent){
-            NewCardIntent.OnSave -> createCard(CardEntity(0,state.value.cardName,0,state.value.initialDeposit.toInt(),state.value.cardColor.toString(),"1234"))
+            is NewCardIntent.OnSave -> createCard(intent.userId,intent.navigate)
             is NewCardIntent.OnUpdateCardColor -> setCardColor(intent.color)
             is NewCardIntent.OnUpdateCardName -> setCardName(intent.cardName)
             is NewCardIntent.OnUpdateInitialDeposit -> setInitialDeposit(intent.deposit)
@@ -32,7 +32,7 @@ class NewCardViewModel(private val addCardUseCase: AddCardUseCase) : ViewModel()
         _state.update { it.copy(cardName = name) }
     }
 
-    private fun setCardColor(color: Color){
+    private fun setCardColor(color: String){
         _state.update { it.copy(cardColor = color) }
     }
 
@@ -40,9 +40,14 @@ class NewCardViewModel(private val addCardUseCase: AddCardUseCase) : ViewModel()
         _state.update { it.copy(initialDeposit = deposit) }
     }
 
-    private fun createCard(newCardEntity: CardEntity){
+    private fun createCard(userId:Int,nav:()->Unit){
+        val card = CardDTO(0,userId,state.value.cardName, deposit = state.value.initialDeposit.toInt(), cardColor = state.value.cardColor, lastDigits = (1000..9999).random().toString())
         viewModelScope.launch {
-            addCardUseCase(newCardEntity)
+            when(val result = addCardUseCase(card)){
+                is Result.Error -> _state.update { it.copy(error = result.message) }
+                Result.Loading -> TODO()
+                is Result.Success<*> -> {nav()}
+            }
         }
     }
 
