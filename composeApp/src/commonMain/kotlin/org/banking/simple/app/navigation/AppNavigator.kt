@@ -29,6 +29,6 @@ fun AppNavigator(innerPadding: PaddingValues, navController: NavHostController,d
         composable (Screen.NewCard.route) { NewCardScreen(navController,daoHolder.cardDao) }
         composable (Screen.Profile.route ) {ProfileScreen()}
         composable (Screen.Auth.route) { AuthScreen(daoHolder.userDao,navController) }
-        composable ( Screen.Entry.route ) {BankingPinScreen(daoHolder.userDao)}
+        composable ( Screen.Entry.route ) {BankingPinScreen(daoHolder.userDao,navController)}
     }
 }

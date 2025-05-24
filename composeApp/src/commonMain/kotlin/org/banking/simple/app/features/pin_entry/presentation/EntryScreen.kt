@@ -25,22 +25,28 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.cmppreference.LocalPreference
 import com.example.cmppreference.LocalPreferenceProvider
+import org.banking.simple.app.core.Screen
 import org.banking.simple.app.features.auth.data.UserDao
 import org.banking.simple.app.features.pin_entry.data.EntryRepositoryImpl
 import org.banking.simple.app.features.pin_entry.domain.GetUsernameUseCase
+import org.banking.simple.app.features.pin_entry.domain.OnInsertPinUseCase
 
 @Composable
 fun BankingPinScreen(
     userDao:UserDao,
+    navController:NavController
 ) {
 
 
     LocalPreferenceProvider {
      val preference = LocalPreference.current
-
-    val viewModel = viewModel { EntryViewModel(GetUsernameUseCase(EntryRepositoryImpl(userDao))) }
+    val repository = EntryRepositoryImpl(userDao)
+     val getUsernameUseCase = GetUsernameUseCase(repository)
+        val insertPinUseCase = OnInsertPinUseCase(repository)
+    val viewModel = viewModel { EntryViewModel(getUsernameUseCase,insertPinUseCase) }
     val state = viewModel.state.collectAsState()
 
     LaunchedEffect(Unit) {
@@ -151,6 +157,17 @@ fun BankingPinScreen(
                     }
                 }
 
+                if(state.value.error.isNotEmpty()){
+                   Text(
+                       text = state.value.error,
+                       color = Color.Red,
+                       fontSize = 12.sp,
+                       textAlign = TextAlign.Center,
+                       modifier = Modifier.padding(horizontal = 32.dp)
+                   )
+
+                }
+
                 Text(
                     text = "Enter your 6-digit PIN to access your account securely",
                     color = Color.White.copy(alpha = 0.6f),
@@ -181,7 +198,8 @@ fun BankingPinScreen(
                                 val number = (row * 3 + col).toString()
                                 NumberButton(
                                     number = number,
-                                    onClick = { viewModel.onIntent(EntryIntent.OnHandleNumberPress(number)) }
+                                    onClick = { viewModel.onIntent(EntryIntent.OnHandleNumberPress(number,{navController.navigate(
+                                        Screen.Dashboard.route){popUpTo(Screen.Entry.route ) { inclusive = true}}})) }
                                 )
                             }
                         }
@@ -200,7 +218,8 @@ fun BankingPinScreen(
 
                         NumberButton(
                             number = "0",
-                            onClick = { viewModel.onIntent(EntryIntent.OnHandleNumberPress("0")) }
+                            onClick = { viewModel.onIntent(EntryIntent.OnHandleNumberPress("0",{navController.navigate(
+                                Screen.Dashboard.route){popUpTo(Screen.Entry.route ) { inclusive = true}}})) }
                         )
 
                         ActionButton(

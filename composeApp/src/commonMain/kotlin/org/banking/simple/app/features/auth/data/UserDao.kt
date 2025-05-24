@@ -15,5 +15,8 @@ interface UserDao {
     @Query("Select name from users where id=:userId")
     suspend fun getName(userId:Int):String
 
+    @Query("SELECT EXISTS(SELECT 1 FROM users WHERE pin = :pin)")
+    suspend fun enterPin(pin: String): Boolean
+
 
 }

@@ -13,4 +13,17 @@ class EntryRepositoryImpl(private val userDao: UserDao): EntryRepository {
             return Result.Error(e.message ?: "Unknown Error")
         }
     }
+
+    override suspend fun insertPin(pin: String): Result<Unit> {
+        try {
+           val response = userDao.enterPin(pin)
+           if(response){
+               return Result.Success(Unit)
+           }
+            return Result.Error("Wrong Pin!")
+
+        }catch (e: Exception){
+            return Result.Error(e.message ?: "Unknown Error")
+        }
+    }
 }
