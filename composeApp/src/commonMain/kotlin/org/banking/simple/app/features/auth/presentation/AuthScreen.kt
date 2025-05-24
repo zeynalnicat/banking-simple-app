@@ -1,7 +1,6 @@
 package org.banking.simple.app.features.auth.presentation
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -41,7 +40,7 @@ fun AuthScreen(userDao: UserDao, navController: NavController) {
         val preference = LocalPreference.current
         var pinVisible by remember { mutableStateOf(false) }
 
-        if(preference.getString("username")?.isNotEmpty() == true){
+        if(preference.getInt("userId",-1)!=-1){
             navController.navigate(Screen.Entry.route)
         }else{
             Scaffold(
@@ -93,12 +92,15 @@ fun AuthScreen(userDao: UserDao, navController: NavController) {
                         )
 
                         Spacer(modifier = Modifier.height(16.dp))
-
                         BankTextField(
                             value = state.pin,
                             onValueChange = { viewModel.onIntent(AuthIntent.OnSavePin(it)) },
                             label = "PIN",
                             placeholder = "Enter your PIN",
+                            isError = state.error.isNotEmpty(),
+                            supportingText = if (state.error.isNotEmpty()) {
+                                state.error
+                            } else null,
                             leadingIcon = {
                                 Icon(
                                     imageVector = Icons.Default.Lock,
@@ -106,6 +108,7 @@ fun AuthScreen(userDao: UserDao, navController: NavController) {
                                     tint = MaterialTheme.colorScheme.primary
                                 )
                             },
+
                             trailingIcon = {
                                 IconButton(onClick = { pinVisible = !pinVisible }) {
                                     Icon(
@@ -115,10 +118,7 @@ fun AuthScreen(userDao: UserDao, navController: NavController) {
                                 }
                             },
                             visualTransformation = if (pinVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                            keyboardOptions = KeyboardOptions(
-                                keyboardType = KeyboardType.NumberPassword,
-                                imeAction = ImeAction.Done
-                            ),
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         )
 
                         Spacer(modifier = Modifier.height(24.dp))
@@ -128,6 +128,7 @@ fun AuthScreen(userDao: UserDao, navController: NavController) {
                                 viewModel.onIntent(
                                     AuthIntent.OnSubmit(
                                         navigate = {
+                                            preference.put("userId",it)
                                             navController.navigate(Screen.Dashboard.route) {
                                                 popUpTo(Screen.Auth.route) { inclusive = true }
                                             }
@@ -135,7 +136,6 @@ fun AuthScreen(userDao: UserDao, navController: NavController) {
                                     )
                                 )
 
-                                preference.put("username",state.name)
                             },
                             text = "Sign In",
                         )

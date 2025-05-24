@@ -4,5 +4,5 @@ import org.banking.simple.app.core.data.Result
 
 interface AuthRepository {
 
-    suspend fun submit(authEntity: UserEntity): Result<Unit>
+    suspend fun submit(authEntity: UserEntity): Result<Int>
 }

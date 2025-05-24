@@ -40,12 +40,12 @@ fun App(daoHolder: DaoHolder) {
         val currentBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = currentBackStackEntry?.destination?.route
 
-        val isUserLoggedIn =preference.getString("username")
+        val isUserLoggedIn =preference.getInt("userId",-1)
 
         MaterialTheme {
             Scaffold(
                 bottomBar = {
-                    if (isUserLoggedIn!=null && currentRoute !in listOf(Screen.Auth.route)) {
+                    if (isUserLoggedIn!=-1 && currentRoute !in listOf(Screen.Entry.route)) {
                         NavigationBar {
                             topLevelRoutes.forEach { route ->
                                 val selected = currentRoute == route.route

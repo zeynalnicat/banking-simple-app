@@ -31,18 +31,24 @@ class AuthViewModel(private val authUseCase: AuthUseCase): ViewModel() {
     }
 
     private fun savePin(pin:String){
-        _state.update { it.copy(pin=pin) }
+        _state.update { it.copy(error = "") }
+        if(pin.length <= 6 ){
+            _state.update { it.copy(pin=pin) }
+        }else{
+            _state.update { it.copy(error = "Enter only 6-digit numbers") }
+        }
+
     }
 
-    private fun submit(navigate:()->Unit){
+    private fun submit(navigate:(Int)->Unit){
         viewModelScope.launch {
             when (val result = authUseCase.invoke(UserEntity(0, state.value.name, state.value.pin))) {
                 is Result.Success -> {
-                    navigate()
+                    navigate(result.data)
                 }
                 is Result.Error -> {
                     println("Error: ${result.message}")
-                    navigate()
+//                    navigate()
                 }
                 is Result.Loading -> {
 
