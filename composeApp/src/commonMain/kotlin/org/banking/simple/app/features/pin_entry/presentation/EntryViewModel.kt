@@ -1,12 +1,16 @@
 package org.banking.simple.app.features.pin_entry.presentation
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import org.banking.simple.app.core.data.Result
+import org.banking.simple.app.features.pin_entry.domain.GetUsernameUseCase
 
-class EntryViewModel: ViewModel() {
+class EntryViewModel(private val getUsernameUseCase: GetUsernameUseCase): ViewModel() {
 
     private val _state = MutableStateFlow<EntryState>(EntryState())
 
@@ -18,6 +22,7 @@ class EntryViewModel: ViewModel() {
             EntryIntent.OnHandleClear -> handleClear()
             is EntryIntent.OnHandleNumberPress -> handleNumberPress(intent.number)
             EntryIntent.OnHandleShow -> handleShow()
+            is EntryIntent.OnFetchUsername -> getUsername(intent.userId)
         }
     }
 
@@ -27,10 +32,24 @@ class EntryViewModel: ViewModel() {
             val newPin = _state.value.pin.toMutableList()
             newPin[_state.value.currentIndex] = number
             _state.update { it.copy(pin = newPin, currentIndex = _state.value.currentIndex+1) }
+        }
 
+
+    }
+
+    private fun getUsername(userId:Int){
+        viewModelScope.launch {
+            val result = getUsernameUseCase(userId)
+           when( result){
+               is Result.Error -> {_state.update { it.copy(error = result.message) }}
+               Result.Loading -> TODO()
+               is Result.Success -> { _state.update { it.copy(name = result.data) }}
+           }
 
         }
+
     }
+
 
     private fun handleBackspace() {
         if (_state.value.currentIndex > 0) {
@@ -48,4 +67,6 @@ class EntryViewModel: ViewModel() {
     private fun handleShow(){
         _state.update { it.copy(showPin = !_state.value.showPin) }
     }
+
+
 }

@@ -25,15 +25,27 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.cmppreference.LocalPreference
+import com.example.cmppreference.LocalPreferenceProvider
+import org.banking.simple.app.features.auth.data.UserDao
+import org.banking.simple.app.features.pin_entry.data.EntryRepositoryImpl
+import org.banking.simple.app.features.pin_entry.domain.GetUsernameUseCase
 
 @Composable
 fun BankingPinScreen(
-    username: String = "John Smith",
+    userDao:UserDao,
 ) {
 
-    val viewModel = viewModel { EntryViewModel() }
+
+    LocalPreferenceProvider {
+     val preference = LocalPreference.current
+
+    val viewModel = viewModel { EntryViewModel(GetUsernameUseCase(EntryRepositoryImpl(userDao))) }
     val state = viewModel.state.collectAsState()
 
+    LaunchedEffect(Unit) {
+        viewModel.onIntent(EntryIntent.OnFetchUsername(preference.getInt("userId",-1)))
+    }
 
     val gradientBackground = Brush.verticalGradient(
         colors = listOf(
@@ -75,7 +87,7 @@ fun BankingPinScreen(
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = username,
+                        text = state.value.name,
                         color = Color.White,
                         fontSize = 28.sp,
                         fontWeight = FontWeight.Medium
@@ -200,6 +212,7 @@ fun BankingPinScreen(
                 }
             }
         }
+    }
     }
 }
 

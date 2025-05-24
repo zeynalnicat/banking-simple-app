@@ -6,5 +6,6 @@ sealed class EntryIntent {
     data object HandleBackPress: EntryIntent()
     data object OnHandleClear: EntryIntent()
     data object OnHandleShow: EntryIntent()
+    data class OnFetchUsername(val userId:Int): EntryIntent()
 
 }

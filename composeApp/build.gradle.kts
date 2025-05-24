@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.composeCompiler)
     id("com.google.devtools.ksp")
     alias (libs.plugins.room)
+//    id("com.squareup.sqldelight") version "2.0.0"
 
 }
 
@@ -41,6 +42,7 @@ kotlin {
             implementation(libs.androidx.material.icons.extended)
             implementation(libs.androidx.material.icons.core)
             implementation(libs.androidx.material3)
+            implementation(libs.android.driver)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -54,6 +56,7 @@ kotlin {
             implementation(libs.androidx.room.ktx)
             implementation(libs.androidx.room.runtime.android)
             implementation(libs.androidx.room.compiler)
+            implementation(libs.runtime)
             implementation(libs.sqlite.bundled)
             implementation(libs.androidx.lifecycle.runtimeCompose)
 
@@ -75,7 +78,12 @@ kotlin {
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
+
+        iosMain.dependencies {
+            implementation(libs.native.driver)
+        }
     }
+
 }
 
 configurations.all {
@@ -111,15 +119,21 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
 }
+
 
 
 room {
     schemaDirectory("$projectDir/schemas")
 }
 
+
 dependencies {
     ksp(libs.androidx.room.compiler)
     debugImplementation(compose.uiTooling)
 }
+
+
+
 

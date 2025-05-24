@@ -28,7 +28,7 @@ class DashboardViewModel(private val addTransactionUseCase: AddTransactionUseCas
 
     fun insert(){
         viewModelScope.launch {
-            when(val result = addTransactionUseCase(TransactionHistory(0,1,0,0,false, TransactionType.ELECTRICITY))){
+            when(addTransactionUseCase(TransactionHistory(0,1,0,0,false, TransactionType.ELECTRICITY))){
                 is Result.Error -> TODO()
                 Result.Loading -> TODO()
                 is Result.Success<*> -> TODO()
