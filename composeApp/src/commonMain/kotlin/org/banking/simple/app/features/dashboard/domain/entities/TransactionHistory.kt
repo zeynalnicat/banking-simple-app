@@ -18,7 +18,7 @@ data class TransactionHistory(
     var userId: Int,
     var total : Int ,
     var isExpense: Boolean,
-    var type: TransactionType,
+    var type: String,
 )
 
 

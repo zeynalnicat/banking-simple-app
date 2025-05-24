@@ -27,22 +27,13 @@ class DashboardViewModel(
 
     fun onIntent(dashboardIntent: DashboardIntent){
        when(dashboardIntent){
-           is DashboardIntent.OnAddTransaction -> insert()
            is DashboardIntent.OnGetTransactionHistory -> getTransactionHistory(userId = dashboardIntent.userId)
            is DashboardIntent.OnGetCards -> getCards(dashboardIntent.userId)
 
        }
     }
 
-    private fun insert(){
-        viewModelScope.launch {
-            when(addTransactionUseCase(TransactionHistory(0,1,0,0,false, TransactionType.ELECTRICITY))){
-                is Result.Error -> TODO()
-                Result.Loading -> TODO()
-                is Result.Success<*> -> TODO()
-            }
-        }
-    }
+
 
     private fun getTransactionHistory(userId:Int){
         viewModelScope.launch {

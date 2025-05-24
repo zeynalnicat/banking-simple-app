@@ -43,8 +43,6 @@ fun RecentActivities(transactions:List<TransactionDTO>) {
             color = Color.Gray.copy(alpha = 0.8f)
         )
     }else{
-
-
             LazyColumn {
                 items(5) {
                     ActivityItem()

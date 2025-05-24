@@ -79,7 +79,7 @@ fun CardSection(navController: NavController?=null,cardDTO: CardDTO?,isPreview: 
                 .height(180.dp)
                 .background(Color(cardDTO!!.cardColor.toULong()),
                     shape = RoundedCornerShape(20.dp))
-                .clickable { navController?.navigate(Screen.Transfer.route) }
+                .clickable { navController?.navigate("transfer/${cardDTO.id}") }
         ) {
             Column(
                 modifier = Modifier.padding(24.dp).fillMaxHeight(),

@@ -4,9 +4,12 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.CreationExtras.Empty.get
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import org.banking.simple.app.core.DaoHolder
 import org.banking.simple.app.core.Screen
 import org.banking.simple.app.features.auth.presentation.AuthScreen
@@ -26,7 +29,15 @@ fun AppNavigator(innerPadding: PaddingValues, navController: NavHostController,d
         modifier = Modifier.padding(innerPadding)
     ) {
         composable(Screen.Dashboard.route) { DashboardScreen(navController,daoHolder.transactionDao,daoHolder.cardDao) }
-        composable ( Screen.Transfer.route)  { CardDetailsScreen(navController) }
+        composable(
+            route = Screen.Transfer.route,
+            arguments = listOf(navArgument("cardId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val cardId = backStackEntry.arguments?.get("cardId") as? Int ?: -1
+
+
+            CardDetailsScreen(navController, daoHolder.cardDao,daoHolder.transactionDao ,cardId)
+        }
         composable (Screen.NewCard.route) { NewCardScreen(navController,daoHolder.cardDao) }
         composable (Screen.Profile.route ) {ProfileScreen()}
         composable (Screen.Auth.route) { AuthScreen(daoHolder.userDao,navController) }
