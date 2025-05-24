@@ -6,7 +6,7 @@ import org.banking.simple.app.features.transfer.domain.CardDetailsRepository
 
 class AddTransactionUseCase(private val repository: CardDetailsRepository) {
 
-    suspend operator fun invoke(transactionDTO: TransactionDTO): Result<Unit>{
-        return repository.insertTransaction(transactionDTO)
+    suspend operator fun invoke(transactionDTO: TransactionDTO,isExpense: Boolean): Result<Unit>{
+        return repository.insertTransaction(transactionDTO,isExpense)
     }
 }

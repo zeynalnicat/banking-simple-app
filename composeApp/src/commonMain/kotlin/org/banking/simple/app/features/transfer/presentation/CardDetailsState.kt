@@ -11,6 +11,7 @@ data class CardDetailsState(
     var transactionTotal: String = "0",
     var transactionHistory : List<TransactionDTO> = emptyList(),
     val card: CardDTO = CardDTO(0,0,"","","",0),
-    val error : String = ""
+    val error : String = "",
+    var isExpense: Boolean = true
 
 )

@@ -15,10 +15,7 @@ import androidx.compose.material.icons.filled.FormatIndentDecrease
 import androidx.compose.material.icons.filled.Maximize
 import androidx.compose.material.icons.filled.Minimize
 import androidx.compose.material.icons.filled.NotInterested
-import androidx.compose.material.icons.filled.Restaurant
-import androidx.compose.material.icons.filled.TextDecrease
-import androidx.compose.material.icons.filled.TextIncrease
-import androidx.compose.material.icons.filled.WaterfallChart
+
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -62,8 +59,8 @@ fun TransactionItem(transaction:TransactionDTO) {
 
             }
             else{
-                Text("+", color = Color.Green, fontSize = 18.sp, fontWeight = FontWeight.W600)
-                Text("\$${transaction.total}", color = Color.Green, fontSize = 14.sp, fontWeight = FontWeight.W600)
+                Text("+", color = Color.Green.copy(green = 0.8f), fontSize = 18.sp, fontWeight = FontWeight.W600)
+                Text("\$${transaction.total}", color = Color.Green.copy(green = 0.8f), fontSize = 14.sp, fontWeight = FontWeight.W600)
             }
 
         }

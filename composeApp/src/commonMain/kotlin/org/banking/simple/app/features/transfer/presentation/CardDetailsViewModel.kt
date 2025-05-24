@@ -33,6 +33,7 @@ class CardDetailsViewModel(
             is CardDetailsIntent.OnGetCardDetails ->getCardDetails(userId =intent.userId, cardId = intent.cardId)
             CardDetailsIntent.OnInsertTransaction -> addTransaction()
             is CardDetailsIntent.OnGetTransactions -> getTransactions(intent.userId,intent.cardId)
+            is CardDetailsIntent.OnSetIsExpense -> setIsExpense(intent.isExpense)
         }
     }
 
@@ -58,19 +59,40 @@ class CardDetailsViewModel(
         }
     }
 
+    private fun setIsExpense(isExpense: Boolean){
+        _state.update { it.copy(isExpense = isExpense)}
+    }
+
+
     private fun addTransaction(){
-        viewModelScope.launch {
-            val card =_state.value.card
-            val newBalance = _state.value.balance -_state.value.transactionTotal.toInt()
-            val transactionDTO = TransactionDTO(0,card.id,card.userId,_state.value.transactionTotal.toInt(), isExpense = true, type =state.value.transactionType )
-            when(val result = addTransactionUseCase(transactionDTO)){
-                is Result.Error -> {_state.update { it.copy(error = result.message) }}
-                Result.Loading -> TODO()
-                is Result.Success -> {
-                    _state.update { it.copy(showDialog = false, transactionType = "", balance =newBalance,transactionHistory = _state.value.transactionHistory + transactionDTO) }
+        if(!_state.value.isExpense){
+            viewModelScope.launch {
+                val card =_state.value.card
+                val newBalance = _state.value.balance + state.value.transactionTotal.toInt()
+                val transactionDTO = TransactionDTO(0,card.id,card.userId,_state.value.transactionTotal.toInt(), isExpense = false, type =state.value.transactionType )
+                when(val result = addTransactionUseCase(transactionDTO,_state.value.isExpense)){
+                    is Result.Error -> {_state.update { it.copy(error = result.message) }}
+                    Result.Loading -> TODO()
+                    is Result.Success -> {
+                        _state.update { it.copy(showDialog = false, transactionType = "", balance =newBalance,transactionHistory = _state.value.transactionHistory + transactionDTO) }
                     }
                 }
+            }
+        }else{
+            viewModelScope.launch {
+                val card =_state.value.card
+                val newBalance = _state.value.balance -_state.value.transactionTotal.toInt()
+                val transactionDTO = TransactionDTO(0,card.id,card.userId,_state.value.transactionTotal.toInt(), isExpense = true, type =state.value.transactionType )
+                when(val result = addTransactionUseCase(transactionDTO,_state.value.isExpense)){
+                    is Result.Error -> {_state.update { it.copy(error = result.message) }}
+                    Result.Loading -> TODO()
+                    is Result.Success -> {
+                        _state.update { it.copy(showDialog = false, transactionType = "", balance =newBalance,transactionHistory = _state.value.transactionHistory + transactionDTO) }
+                    }
+                }
+            }
         }
+
     }
 
     private fun getTransactions(userId: Int,cardId: Int){

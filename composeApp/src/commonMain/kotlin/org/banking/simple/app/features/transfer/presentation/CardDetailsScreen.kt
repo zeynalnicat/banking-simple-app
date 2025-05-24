@@ -141,7 +141,10 @@ fun CardDetailsScreen(navController: NavController, cardDao: CardDao, transactio
                     ) {
                         operationItems.forEach { item ->
                             Column(
-                                modifier = Modifier.padding(vertical = 16.dp),
+                                modifier = Modifier.padding(vertical = 16.dp)
+                                    .clickable { viewModel.onIntent(CardDetailsIntent.OnShowDialog(true))
+                                               viewModel.onIntent(CardDetailsIntent.OnSetTransactionType(item.name))
+                                               viewModel.onIntent(CardDetailsIntent.OnSetIsExpense(false))},
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 Icon(
@@ -180,6 +183,7 @@ fun CardDetailsScreen(navController: NavController, cardDao: CardDao, transactio
                                                 paymentLists[index].name
                                             )
                                         )
+                                        viewModel.onIntent(CardDetailsIntent.OnSetIsExpense(true))
                                     }
                             ) {
                                 Row(

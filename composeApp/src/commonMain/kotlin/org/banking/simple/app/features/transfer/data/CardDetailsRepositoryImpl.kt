@@ -24,12 +24,12 @@ class CardDetailsRepositoryImpl(private val cardDao: CardDao,private val transac
         }
     }
 
-    override suspend fun insertTransaction(transactionDTO: TransactionDTO): Result<Unit> {
+    override suspend fun insertTransaction(transactionDTO: TransactionDTO,isExpense: Boolean): Result<Unit> {
         try {
             val response =transactionDao.insertTransaction(transactionDTO.toEntity())
             val balance = cardDao.getBalance(transactionDTO.userId,transactionDTO.cardId)
             if(response!=-1L){
-                val newBalance = balance - transactionDTO.total
+                val newBalance = if(isExpense) balance - transactionDTO.total else balance + transactionDTO.total
                 cardDao.updateBalance(transactionDTO.userId,transactionDTO.cardId,newBalance)
                 return Result.Success(Unit)
             }
