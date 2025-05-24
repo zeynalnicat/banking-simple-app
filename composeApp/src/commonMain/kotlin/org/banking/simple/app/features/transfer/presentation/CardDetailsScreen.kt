@@ -1,6 +1,7 @@
 package org.banking.simple.app.features.transfer.presentation
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,7 +22,6 @@ import androidx.compose.material.icons.filled.AssuredWorkload
 import androidx.compose.material.icons.filled.EMobiledata
 import androidx.compose.material.icons.filled.Fastfood
 import androidx.compose.material.icons.filled.Healing
-import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Lightbulb
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material.icons.filled.ShoppingCart
@@ -45,7 +45,7 @@ import org.banking.simple.app.features.shared.ui.components.TopBar
 
 
 @Composable
-fun TransferScreen(navController: NavController) {
+fun CardDetailsScreen(navController: NavController) {
     val operationItems = listOf(
         OperationItem(Icons.Default.Wallet, "Top Up"),
         OperationItem(Icons.Default.Send, "Send"),
@@ -137,6 +137,7 @@ fun TransferScreen(navController: NavController) {
                             Card(
                                 shape = RoundedCornerShape(10.dp),
                                 modifier = Modifier.fillMaxWidth()
+                                    .clickable {  }
                             ) {
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
