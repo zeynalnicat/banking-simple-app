@@ -49,7 +49,6 @@ fun TransferScreen(navController: NavController) {
     val operationItems = listOf(
         OperationItem(Icons.Default.Wallet, "Top Up"),
         OperationItem(Icons.Default.Send, "Send"),
-        OperationItem(Icons.Default.History, "History")
     )
 
     val paymentLists = listOf(

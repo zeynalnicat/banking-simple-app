@@ -13,7 +13,11 @@ interface TransactionDao {
     @Insert
     suspend fun insertTransaction(transactionHistory: TransactionHistory):Long
 
+    @Query("Select * from Transactions where userId=:userId")
+    suspend fun getTransactions(userId:Int,):List<TransactionHistory>
+
     @Query("Select * from Transactions where userId=:userId and cardId=:cardId")
-    suspend fun getTransactions(userId:Int, cardId:Int):List<TransactionHistory>
+    suspend fun getTransactionsDue(userId:Int, cardId:Int):List<TransactionHistory>
+
 
 }

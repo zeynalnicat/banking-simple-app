@@ -3,11 +3,12 @@ package org.banking.simple.app.features.dashboard.data
 import org.banking.simple.app.core.data.Result
 import org.banking.simple.app.features.dashboard.data.local.CardDao
 import org.banking.simple.app.features.dashboard.data.local.TransactionDao
-import org.banking.simple.app.features.dashboard.domain.CardDTO
+import org.banking.simple.app.features.dashboard.domain.models.CardDTO
 import org.banking.simple.app.features.dashboard.domain.DashboardRepository
 import org.banking.simple.app.features.dashboard.domain.entities.TransactionHistory
 import org.banking.simple.app.features.dashboard.domain.mapper.toEntity
 import org.banking.simple.app.features.dashboard.domain.mapper.toModel
+import org.banking.simple.app.features.dashboard.domain.models.TransactionDTO
 
 class DashboardRepositoryImpl(private val transactionDao: TransactionDao,private val cardDao: CardDao): DashboardRepository {
     override suspend fun insertTransaction(transactionHistory: TransactionHistory): Result<Unit> {
@@ -24,11 +25,10 @@ class DashboardRepositoryImpl(private val transactionDao: TransactionDao,private
 
     override suspend fun getTransactions(
         userId: Int,
-        cardId: Int
-    ): Result<List<TransactionHistory>> {
+    ): Result<List<TransactionDTO>> {
         try {
-            val response = transactionDao.getTransactions(userId,cardId)
-            return Result.Success(response)
+            val response = transactionDao.getTransactions(userId)
+            return Result.Success(response.map { it.toModel() })
         }catch (e: Exception){
             return Result.Error(e.message?: "Unknown Error Occurred")
         }

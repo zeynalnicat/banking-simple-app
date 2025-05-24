@@ -23,7 +23,7 @@ import com.example.cmppreference.LocalPreference
 import com.example.cmppreference.LocalPreferenceProvider
 import org.banking.simple.app.core.Screen
 import org.banking.simple.app.features.dashboard.data.local.CardDao
-import org.banking.simple.app.features.dashboard.domain.CardDTO
+import org.banking.simple.app.features.dashboard.domain.models.CardDTO
 import org.banking.simple.app.features.dashboard.presentation.components.CardSection
 import org.banking.simple.app.features.new_card.presentation.NewCardIntent
 import org.banking.simple.app.features.new_card.data.NewCardRepositoryImpl

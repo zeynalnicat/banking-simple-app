@@ -1,4 +1,4 @@
-package org.banking.simple.app.features.dashboard.domain
+package org.banking.simple.app.features.dashboard.domain.models
 
 data class CardDTO (
     val id:Int,
@@ -8,4 +8,3 @@ data class CardDTO (
     var cardColor: String,
     var deposit:Int,
 )
-

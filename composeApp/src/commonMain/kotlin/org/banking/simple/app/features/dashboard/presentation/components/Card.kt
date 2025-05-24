@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import org.banking.simple.app.features.shared.ui.colors.AppColors
 import org.banking.simple.app.core.Screen
-import org.banking.simple.app.features.dashboard.domain.CardDTO
+import org.banking.simple.app.features.dashboard.domain.models.CardDTO
 
 
 @Composable

@@ -14,7 +14,7 @@ import androidx.compose.ui.graphics.Color
 
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import org.banking.simple.app.features.dashboard.domain.CardDTO
+import org.banking.simple.app.features.dashboard.domain.models.CardDTO
 import org.banking.simple.app.features.dashboard.domain.entities.CardEntity
 import org.banking.simple.app.features.shared.ui.colors.AppColors
 

@@ -36,10 +36,10 @@ import org.banking.simple.app.features.dashboard.data.DashboardRepositoryImpl
 import org.banking.simple.app.features.dashboard.data.local.CardDao
 import org.banking.simple.app.features.dashboard.data.local.TransactionDao
 import org.banking.simple.app.features.dashboard.domain.usecases.AddTransactionUseCase
-import org.banking.simple.app.features.dashboard.domain.entities.CardEntity
-import org.banking.simple.app.features.dashboard.domain.usecases.AddCardUseCase
+
 import org.banking.simple.app.features.dashboard.domain.usecases.GetCardsUseCase
-import org.banking.simple.app.features.dashboard.domain.usecases.GetTransactionUseCase
+import org.banking.simple.app.features.dashboard.domain.usecases.GetTransactionsUseCase
+
 import org.banking.simple.app.features.dashboard.presentation.components.HeaderSection
 import org.banking.simple.app.features.dashboard.presentation.components.HorizontalCardList
 import org.banking.simple.app.features.dashboard.presentation.components.RecentActivities
@@ -51,7 +51,7 @@ import org.banking.simple.app.features.shared.ui.components.DSizedBox
 fun DashboardScreen(navController: NavController,transactionDao: TransactionDao,cardDao: CardDao){
     val repoImpl = DashboardRepositoryImpl(transactionDao,cardDao)
     val addTransactionUseCase = AddTransactionUseCase(repoImpl)
-    val getTransactionUseCase =  GetTransactionUseCase(repoImpl)
+    val getTransactionUseCase =  GetTransactionsUseCase(repoImpl)
     val getCardsUseCase = GetCardsUseCase(repoImpl)
 
     val viewModel = viewModel{ DashboardViewModel(addTransactionUseCase,
@@ -71,7 +71,7 @@ fun DashboardScreen(navController: NavController,transactionDao: TransactionDao,
                 HeaderSection(navController)
                 HorizontalCardList(cards = state.cards, navController = navController)
                 DSizedBox.twentyFourH()
-                RecentActivities()
+                RecentActivities(state.transactionHistory)
             }
         }
     }

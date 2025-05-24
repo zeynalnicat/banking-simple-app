@@ -19,12 +19,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.banking.simple.app.features.dashboard.domain.models.TransactionDTO
 import org.banking.simple.app.features.dashboard.presentation.ActivityItem
 import org.banking.simple.app.features.shared.ui.components.DSizedBox
 
 @Composable
-fun RecentActivities() {
+fun RecentActivities(transactions:List<TransactionDTO>) {
     Column(modifier = Modifier.padding(top=16.dp)) {
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -35,12 +37,21 @@ fun RecentActivities() {
         }
 
         Spacer(modifier = Modifier.height(8.dp))
+    if(transactions.isEmpty()){
+        Text(
+            text = "No transactions found",
+            color = Color.Gray.copy(alpha = 0.8f)
+        )
+    }else{
 
-        LazyColumn {
-            items(5) {
-                ActivityItem()
-                DSizedBox.eightH()
+
+            LazyColumn {
+                items(5) {
+                    ActivityItem()
+                    DSizedBox.eightH()
+                }
             }
         }
     }
+
 }

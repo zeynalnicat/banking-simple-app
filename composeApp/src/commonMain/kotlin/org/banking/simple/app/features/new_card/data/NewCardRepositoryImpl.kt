@@ -3,7 +3,7 @@ package org.banking.simple.app.features.new_card.data
 
     import org.banking.simple.app.core.data.Result
     import org.banking.simple.app.features.dashboard.data.local.CardDao
-    import org.banking.simple.app.features.dashboard.domain.CardDTO
+    import org.banking.simple.app.features.dashboard.domain.models.CardDTO
     import org.banking.simple.app.features.dashboard.domain.entities.CardEntity
     import org.banking.simple.app.features.dashboard.domain.mapper.toEntity
     import org.banking.simple.app.features.new_card.domain.NewCardRepository
