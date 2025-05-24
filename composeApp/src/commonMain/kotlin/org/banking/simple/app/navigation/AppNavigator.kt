@@ -12,6 +12,7 @@ import org.banking.simple.app.core.Screen
 import org.banking.simple.app.features.auth.presentation.AuthScreen
 import org.banking.simple.app.features.dashboard.presentation.DashboardScreen
 import org.banking.simple.app.features.new_card.presentation.NewCardScreen
+import org.banking.simple.app.features.pin_entry.presentation.BankingPinScreen
 import org.banking.simple.app.features.profile.presentation.ProfileScreen
 import org.banking.simple.app.features.transfer.presentation.TransferScreen
 
@@ -28,5 +29,6 @@ fun AppNavigator(innerPadding: PaddingValues, navController: NavHostController,d
         composable (Screen.NewCard.route) { NewCardScreen(navController,daoHolder.cardDao) }
         composable (Screen.Profile.route ) {ProfileScreen()}
         composable (Screen.Auth.route) { AuthScreen(daoHolder.userDao,navController) }
+        composable ( Screen.Auth.route ) {BankingPinScreen()}
     }
 }

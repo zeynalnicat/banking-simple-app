@@ -18,7 +18,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import org.banking.simple.app.features.new_card.NewCardIntent
+import org.banking.simple.app.features.new_card.presentation.NewCardIntent
 import org.banking.simple.app.features.shared.ui.colors.AppColors
 
 @Composable

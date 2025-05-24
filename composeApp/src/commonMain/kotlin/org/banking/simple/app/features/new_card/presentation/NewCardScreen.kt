@@ -21,7 +21,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import org.banking.simple.app.features.dashboard.data.local.CardDao
 import org.banking.simple.app.features.dashboard.presentation.components.CardSection
-import org.banking.simple.app.features.new_card.NewCardIntent
+import org.banking.simple.app.features.new_card.presentation.NewCardIntent
 import org.banking.simple.app.features.new_card.data.NewCardRepositoryImpl
 import org.banking.simple.app.features.new_card.domain.AddCardUseCase
 import org.banking.simple.app.features.shared.ui.colors.AppColors

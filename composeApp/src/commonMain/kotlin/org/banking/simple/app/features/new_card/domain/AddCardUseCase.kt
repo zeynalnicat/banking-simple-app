@@ -4,6 +4,7 @@ import org.banking.simple.app.core.data.Result
 import org.banking.simple.app.features.dashboard.domain.CardEntity
 
 class AddCardUseCase(private val newCardRepository: NewCardRepository) {
+
     suspend operator fun invoke(newCardEntity: CardEntity): Result<Unit>{
         return newCardRepository.createCard(newCardEntity)
     }

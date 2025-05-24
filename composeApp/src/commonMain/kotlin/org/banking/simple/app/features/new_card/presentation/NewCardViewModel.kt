@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.banking.simple.app.features.dashboard.domain.CardEntity
-import org.banking.simple.app.features.new_card.NewCardIntent
+import org.banking.simple.app.features.new_card.presentation.NewCardIntent
 import org.banking.simple.app.features.new_card.domain.AddCardUseCase
 import org.banking.simple.app.features.new_card.domain.NewCardRepository
 

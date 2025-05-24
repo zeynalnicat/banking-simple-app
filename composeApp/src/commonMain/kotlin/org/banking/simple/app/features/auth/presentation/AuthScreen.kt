@@ -39,127 +39,132 @@ fun AuthScreen(userDao: UserDao, navController: NavController) {
 
     LocalPreferenceProvider {
         val preference = LocalPreference.current
-        val username = remember { mutableStateOf("") }
         var pinVisible by remember { mutableStateOf(false) }
 
-        Scaffold(
-            containerColor = MaterialTheme.colorScheme.background
-        ) { innerPadding ->
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-            ) {
-                Column(
+        if(preference.getString("username")?.isNotEmpty() == true){
+            navController.navigate(Screen.Entry.route)
+        }else{
+            Scaffold(
+                containerColor = MaterialTheme.colorScheme.background
+            ) { innerPadding ->
+                Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(horizontal = 24.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
+                        .padding(innerPadding)
                 ) {
-
-
-                    Text(
-                        text = "Welcome to Simple Banking",
-                        style = MaterialTheme.typography.headlineMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = AppColors.primary
-                    )
-
-                    Text(
-                        text = "Sign in to continue",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(bottom = 32.dp)
-                    )
-
-                    BankTextField(
-                        value = state.name,
-                        onValueChange = { viewModel.onIntent(AuthIntent.OnSaveName(it)) },
-                        label = "Username",
-                        placeholder = "Enter your username",
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Default.Person,
-                                contentDescription = "Username Icon",
-                                tint = MaterialTheme.colorScheme.primary
-                            )
-                        },
-                        keyboardOptions = KeyboardOptions(
-                            imeAction = ImeAction.Next
-                        ),
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    BankTextField(
-                        value = state.pin,
-                        onValueChange = { viewModel.onIntent(AuthIntent.OnSavePin(it)) },
-                        label = "PIN",
-                        placeholder = "Enter your PIN",
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Default.Lock,
-                                contentDescription = "PIN Icon",
-                                tint = MaterialTheme.colorScheme.primary
-                            )
-                        },
-                        trailingIcon = {
-                            IconButton(onClick = { pinVisible = !pinVisible }) {
-                                Icon(
-                                    imageVector = if (pinVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-                                    contentDescription = if (pinVisible) "Hide PIN" else "Show PIN"
-                                )
-                            }
-                        },
-                        visualTransformation = if (pinVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.NumberPassword,
-                            imeAction = ImeAction.Done
-                        ),
-                    )
-
-                    Spacer(modifier = Modifier.height(24.dp))
-
-                    BankButton(
-                        onClick = {
-                            viewModel.onIntent(
-                                AuthIntent.OnSubmit(
-                                    navigate = {
-                                        navController.navigate(Screen.Dashboard.route) {
-                                            popUpTo(Screen.Auth.route) { inclusive = true }
-                                        }
-                                    }
-                                )
-                            )
-
-                            preference.put("username",state.name)
-                        },
-                        text = "Sign In",
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    TextButton(
-                        onClick = { },
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = 24.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
                     ) {
-                        Text(
-                            "Forgot PIN?",
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    }
-                }
 
-                Text(
-                    text = "Simple Banking App v1.0",
-                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
-                    fontSize = 12.sp,
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(bottom = 16.dp)
-                )
+
+                        Text(
+                            text = "Welcome to Simple Banking",
+                            style = MaterialTheme.typography.headlineMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = AppColors.primary
+                        )
+
+                        Text(
+                            text = "Sign in to continue",
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(bottom = 32.dp)
+                        )
+
+                        BankTextField(
+                            value = state.name,
+                            onValueChange = { viewModel.onIntent(AuthIntent.OnSaveName(it)) },
+                            label = "Username",
+                            placeholder = "Enter your username",
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Default.Person,
+                                    contentDescription = "Username Icon",
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                            },
+                            keyboardOptions = KeyboardOptions(
+                                imeAction = ImeAction.Next
+                            ),
+                        )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        BankTextField(
+                            value = state.pin,
+                            onValueChange = { viewModel.onIntent(AuthIntent.OnSavePin(it)) },
+                            label = "PIN",
+                            placeholder = "Enter your PIN",
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Default.Lock,
+                                    contentDescription = "PIN Icon",
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                            },
+                            trailingIcon = {
+                                IconButton(onClick = { pinVisible = !pinVisible }) {
+                                    Icon(
+                                        imageVector = if (pinVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
+                                        contentDescription = if (pinVisible) "Hide PIN" else "Show PIN"
+                                    )
+                                }
+                            },
+                            visualTransformation = if (pinVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.NumberPassword,
+                                imeAction = ImeAction.Done
+                            ),
+                        )
+
+                        Spacer(modifier = Modifier.height(24.dp))
+
+                        BankButton(
+                            onClick = {
+                                viewModel.onIntent(
+                                    AuthIntent.OnSubmit(
+                                        navigate = {
+                                            navController.navigate(Screen.Dashboard.route) {
+                                                popUpTo(Screen.Auth.route) { inclusive = true }
+                                            }
+                                        }
+                                    )
+                                )
+
+                                preference.put("username",state.name)
+                            },
+                            text = "Sign In",
+                        )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        TextButton(
+                            onClick = { },
+                            modifier = Modifier.align(Alignment.CenterHorizontally)
+                        ) {
+                            Text(
+                                "Forgot PIN?",
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    }
+
+                    Text(
+                        text = "Simple Banking App v1.0",
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
+                        fontSize = 12.sp,
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .padding(bottom = 16.dp)
+                    )
+                }
             }
         }
-    }
+        }
+
+
 }
