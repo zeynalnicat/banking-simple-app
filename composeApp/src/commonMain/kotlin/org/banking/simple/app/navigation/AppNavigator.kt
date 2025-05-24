@@ -24,7 +24,7 @@ fun AppNavigator(innerPadding: PaddingValues, navController: NavHostController,d
         startDestination = Screen.Auth.route,
         modifier = Modifier.padding(innerPadding)
     ) {
-        composable(Screen.Dashboard.route) { DashboardScreen(navController,daoHolder.transactionDao) }
+        composable(Screen.Dashboard.route) { DashboardScreen(navController,daoHolder.transactionDao,daoHolder.cardDao) }
         composable ( Screen.Transfer.route)  { TransferScreen(navController) }
         composable (Screen.NewCard.route) { NewCardScreen(navController,daoHolder.cardDao) }
         composable (Screen.Profile.route ) {ProfileScreen()}

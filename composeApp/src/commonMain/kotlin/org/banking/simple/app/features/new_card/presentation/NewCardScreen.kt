@@ -19,7 +19,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.cmppreference.LocalPreference
+import com.example.cmppreference.LocalPreferenceProvider
+import org.banking.simple.app.core.Screen
 import org.banking.simple.app.features.dashboard.data.local.CardDao
+import org.banking.simple.app.features.dashboard.domain.CardDTO
 import org.banking.simple.app.features.dashboard.presentation.components.CardSection
 import org.banking.simple.app.features.new_card.presentation.NewCardIntent
 import org.banking.simple.app.features.new_card.data.NewCardRepositoryImpl
@@ -41,61 +45,76 @@ fun NewCardScreen(navController: NavController,cardDao: CardDao) {
 
 
     val coloredItems = listOf(AppColors.blue, AppColors.pink, AppColors.yellow)
-
-    Scaffold(
-        topBar = {
-            TopBar(navController, title = "Add new card")
-        }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .padding(horizontal = 16.dp)
-        ) {
-            CardSection(
-                name = if(state.cardName.isEmpty()) "Card Name" else state.cardName,
-                lastDigits = "\u2022\u2022\u2022\u2022",
-                cardColor = state.cardColor
-            )
-            DSizedBox.sixteenH()
-            Text("Card Color")
-            DSizedBox.eightH()
-            LazyRow {
-                items(coloredItems.size) { index ->
-                    Card(
-                        shape = CircleShape,
-                        modifier = Modifier
-                            .padding(end = 8.dp)
-                            .size(32.dp),
-                        border = if (state.cardColor == coloredItems[index])
-                            BorderStroke(width = 3.dp, color = Color.White)
-                        else null,
-                        onClick = { viewModel.onIntent(NewCardIntent.OnUpdateCardColor(coloredItems[index])) }
-                    ) {
-                        Box(
+    LocalPreferenceProvider {
+        val preference = LocalPreference.current
+        Scaffold(
+            topBar = {
+                TopBar(navController, title = "Add new card")
+            }
+        ) { innerPadding ->
+            Column(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .padding(horizontal = 16.dp)
+            ) {
+                CardSection(
+                    cardDTO = CardDTO(
+                        0,
+                        0,
+                        if (state.cardName.isEmpty()) "Card Name" else state.cardName,
+                        lastDigits = "\u2022\u2022\u2022\u2022",
+                        cardColor = state.cardColor,
+                        deposit = 0
+                    ),
+                )
+                DSizedBox.sixteenH()
+                Text("Card Color")
+                DSizedBox.eightH()
+                LazyRow {
+                    items(coloredItems.size) { index ->
+                        Card(
+                            shape = CircleShape,
                             modifier = Modifier
-                                .fillMaxSize()
-                                .background(coloredItems[index])
-                        )
+                                .padding(end = 8.dp)
+                                .size(32.dp),
+                            border = if (Color(state.cardColor.toULong()) == coloredItems[index])
+                                BorderStroke(width = 3.dp, color = Color.White)
+                            else null,
+                            onClick = {
+                                viewModel.onIntent(
+                                    NewCardIntent.OnUpdateCardColor(
+                                        coloredItems[index].value.toString()
+                                    )
+                                )
+                            }
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .background(coloredItems[index])
+                            )
+                        }
                     }
                 }
+
+                DSizedBox.sixteenH()
+                BankTextField(
+                    value = state.cardName,
+                    onValueChange = { viewModel.onIntent(NewCardIntent.OnUpdateCardName(it)) },
+                    placeholder = "Enter card name",
+                    label = "Card Name")
+                DSizedBox.sixteenH()
+                BankTextField(value = state.initialDeposit, onValueChange = {
+                    viewModel.onIntent(
+                        NewCardIntent.OnUpdateInitialDeposit(it)
+                    )
+                }, placeholder = "Initial Deposit", label = "Initial Deposit")
+
+                DSizedBox.twentyFourH()
+
+                BankButton({ viewModel.onIntent(NewCardIntent.OnSave(userId = preference.getInt("userId",-1), navigate = {navController.navigate(
+                    Screen.Dashboard.route){popUpTo(Screen.NewCard.route) { inclusive=true }}})) }, "Save")
             }
-
-            DSizedBox.sixteenH()
-            BankTextField(value = state.cardName, onValueChange = {viewModel.onIntent(NewCardIntent.OnUpdateCardName(it))} , placeholder = "Enter card name", label = "Card Name" )
-            DSizedBox.sixteenH()
-            BankTextField(value = state.initialDeposit , onValueChange ={ viewModel.onIntent(
-                NewCardIntent.OnUpdateInitialDeposit(it))} , placeholder = "Initial Deposit", label = "Initial Deposit")
-
-            DSizedBox.twentyFourH()
-
-            BankButton({viewModel.onIntent(NewCardIntent.OnSave)},"Save")
         }
     }
 }
-
-
-data class CardColoredItems (
-    var color : Color,
-    var isSelected : Boolean = false
-)

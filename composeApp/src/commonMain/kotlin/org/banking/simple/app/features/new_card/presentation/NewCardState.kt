@@ -1,10 +1,9 @@
 package org.banking.simple.app.features.new_card.presentation
 
-import androidx.compose.ui.graphics.Color
-import org.banking.simple.app.features.shared.ui.colors.AppColors
 
 data class NewCardState(
     var cardName : String = "",
-    var cardColor : Color = AppColors.blue,
+    var cardColor : String = "18446656211563577344",
     var initialDeposit: String = "0",
+    var error: String = ""
 )

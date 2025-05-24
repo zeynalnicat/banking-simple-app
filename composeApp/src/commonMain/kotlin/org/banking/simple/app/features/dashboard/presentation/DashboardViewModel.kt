@@ -8,13 +8,19 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.banking.simple.app.core.data.Result
-import org.banking.simple.app.features.dashboard.domain.AddTransactionUseCase
-import org.banking.simple.app.features.dashboard.domain.GetTransactionUseCase
-import org.banking.simple.app.features.dashboard.domain.TransactionHistory
-import org.banking.simple.app.features.dashboard.domain.TransactionType
+import org.banking.simple.app.features.dashboard.domain.usecases.AddTransactionUseCase
+import org.banking.simple.app.features.dashboard.domain.usecases.GetTransactionUseCase
+import org.banking.simple.app.features.dashboard.domain.entities.TransactionHistory
+import org.banking.simple.app.features.dashboard.domain.entities.TransactionType
+import org.banking.simple.app.features.dashboard.domain.usecases.AddCardUseCase
+import org.banking.simple.app.features.dashboard.domain.usecases.GetCardsUseCase
 
 
-class DashboardViewModel(private val addTransactionUseCase: AddTransactionUseCase, private val getTransactionUseCase: GetTransactionUseCase): ViewModel() {
+class DashboardViewModel(
+    private val addTransactionUseCase: AddTransactionUseCase,
+    private val getTransactionUseCase: GetTransactionUseCase,
+    private val getCardsUseCase: GetCardsUseCase,
+): ViewModel() {
 
     private val _state = MutableStateFlow(DashboardState())
     val state: StateFlow<DashboardState> = _state.asStateFlow()
@@ -22,11 +28,13 @@ class DashboardViewModel(private val addTransactionUseCase: AddTransactionUseCas
     fun onIntent(dashboardIntent: DashboardIntent){
        when(dashboardIntent){
            is DashboardIntent.OnAddTransaction -> insert()
-           is DashboardIntent.OnGetTransactionHistory -> TODO()
+           is DashboardIntent.OnGetTransactionHistory -> getTransactionHistory()
+           is DashboardIntent.OnGetCards -> getCards(dashboardIntent.userId)
+
        }
     }
 
-    fun insert(){
+    private fun insert(){
         viewModelScope.launch {
             when(addTransactionUseCase(TransactionHistory(0,1,0,0,false, TransactionType.ELECTRICITY))){
                 is Result.Error -> TODO()
@@ -36,13 +44,27 @@ class DashboardViewModel(private val addTransactionUseCase: AddTransactionUseCas
         }
     }
 
-    fun getTransactionHistory(){
+    private fun getTransactionHistory(){
         viewModelScope.launch {
-            when(val result = getTransactionUseCase(state.value.cardEntity.userId,state.value.cardEntity.id)){
-                is Result.Error -> TODO()
+//            when(val result = getTransactionUseCase(state.value.cards.userId,state.value.cardEntity.id)){
+//                is Result.Error -> TODO()
+//                Result.Loading -> TODO()
+//                is Result.Success<List<TransactionHistory>> -> _state.update { state -> state.copy(transactionHistory = emptyList()) }
+//            }
+        }
+    }
+
+    private fun getCards(userId:Int){
+        viewModelScope.launch {
+            when(val result = getCardsUseCase(userId)){
+                is Result.Error -> _state.update { it.copy(error = result.message) }
                 Result.Loading -> TODO()
-                is Result.Success<List<TransactionHistory>> -> _state.update { state -> state.copy(transactionHistory = emptyList()) }
+                is Result.Success -> _state.update { it.copy(cards = result.data) }
             }
         }
+    }
+
+    private fun insertCard(){
+
     }
 }
