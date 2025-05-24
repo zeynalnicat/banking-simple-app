@@ -39,7 +39,7 @@ fun AppNavigator(innerPadding: PaddingValues, navController: NavHostController,d
             CardDetailsScreen(navController, daoHolder.cardDao,daoHolder.transactionDao ,cardId)
         }
         composable (Screen.NewCard.route) { NewCardScreen(navController,daoHolder.cardDao) }
-        composable (Screen.Profile.route ) {ProfileScreen()}
+        composable (Screen.Profile.route ) {ProfileScreen(daoHolder.userDao)}
         composable (Screen.Auth.route) { AuthScreen(daoHolder.userDao,navController) }
         composable ( Screen.Entry.route ) {BankingPinScreen(daoHolder.userDao,navController)}
     }
