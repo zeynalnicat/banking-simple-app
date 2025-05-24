@@ -58,6 +58,7 @@ import org.banking.simple.app.features.transfer.data.OperationItems.paymentLists
 import org.banking.simple.app.features.transfer.domain.CardDetailsRepository
 import org.banking.simple.app.features.transfer.domain.usecases.AddTransactionUseCase
 import org.banking.simple.app.features.transfer.domain.usecases.GetCardDetailsUseCase
+import org.banking.simple.app.features.transfer.domain.usecases.GetTransactionsUseCase
 
 import org.banking.simple.app.features.transfer.presentation.components.TransactionDefaultDialog
 
@@ -68,13 +69,16 @@ fun CardDetailsScreen(navController: NavController, cardDao: CardDao, transactio
     val repository = CardDetailsRepositoryImpl(cardDao,transactionDao)
     val getCardDetailsUseCase = GetCardDetailsUseCase(repository)
     val insertTransactionUseCase = AddTransactionUseCase(repository)
-    val viewModel = viewModel{ CardDetailsViewModel(getCardDetailsUseCase,insertTransactionUseCase) }
+    val getTransactionsUseCase = GetTransactionsUseCase(repository)
+    val viewModel = viewModel{ CardDetailsViewModel(getCardDetailsUseCase,insertTransactionUseCase,getTransactionsUseCase) }
     val state = viewModel.state.collectAsState().value
 
     LocalPreferenceProvider {
         val preference = LocalPreference.current
-    LaunchedEffect(Unit) {
+
+        LaunchedEffect(Unit) {
         viewModel.onIntent(CardDetailsIntent.OnGetCardDetails(userId = preference.getInt("userId",-1), cardId = cardId))
+        viewModel.onIntent(CardDetailsIntent.OnGetTransactions(userId = preference.getInt("userId",-1), cardId = cardId))
     }
 
     Scaffold(

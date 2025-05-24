@@ -12,10 +12,12 @@ import org.banking.simple.app.features.dashboard.domain.entities.TransactionType
 import org.banking.simple.app.features.dashboard.domain.models.TransactionDTO
 import org.banking.simple.app.features.transfer.domain.usecases.AddTransactionUseCase
 import org.banking.simple.app.features.transfer.domain.usecases.GetCardDetailsUseCase
+import org.banking.simple.app.features.transfer.domain.usecases.GetTransactionsUseCase
 
 class CardDetailsViewModel(
     private val cardDetailsUseCase: GetCardDetailsUseCase,
     private val addTransactionUseCase: AddTransactionUseCase,
+    private val getTransactionsUseCase: GetTransactionsUseCase
 
     ):ViewModel() {
 
@@ -30,6 +32,7 @@ class CardDetailsViewModel(
             is CardDetailsIntent.OnSetTransactionType -> setTransactionType(intent.transactionType)
             is CardDetailsIntent.OnGetCardDetails ->getCardDetails(userId =intent.userId, cardId = intent.cardId)
             CardDetailsIntent.OnInsertTransaction -> addTransaction()
+            is CardDetailsIntent.OnGetTransactions -> getTransactions(intent.userId,intent.cardId)
         }
     }
 
@@ -63,7 +66,20 @@ class CardDetailsViewModel(
             when(val result = addTransactionUseCase(transactionDTO)){
                 is Result.Error -> {_state.update { it.copy(error = result.message) }}
                 Result.Loading -> TODO()
-                is Result.Success<*> -> {_state.update { it.copy(showDialog = false, transactionType = "", balance =newBalance )}}
+                is Result.Success -> {
+                    _state.update { it.copy(showDialog = false, transactionType = "", balance =newBalance,transactionHistory = _state.value.transactionHistory + transactionDTO) }
+                    }
+                }
+        }
+    }
+
+    private fun getTransactions(userId: Int,cardId: Int){
+        viewModelScope.launch {
+
+            when(val result = getTransactionsUseCase(userId,cardId)){
+                is Result.Error -> {_state.update { it.copy(error = result.message) }}
+                Result.Loading -> TODO()
+                is Result.Success-> {_state.update { it.copy( transactionHistory =result.data  )}}
             }
         }
     }

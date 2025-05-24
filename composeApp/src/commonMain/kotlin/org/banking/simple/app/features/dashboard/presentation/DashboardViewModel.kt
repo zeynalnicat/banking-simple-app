@@ -17,7 +17,6 @@ import org.banking.simple.app.features.dashboard.domain.usecases.GetTransactions
 
 
 class DashboardViewModel(
-    private val addTransactionUseCase: AddTransactionUseCase,
     private val getTransactionUseCase: GetTransactionsUseCase,
     private val getCardsUseCase: GetCardsUseCase,
 ): ViewModel() {
@@ -55,7 +54,4 @@ class DashboardViewModel(
         }
     }
 
-    private fun insertCard(){
-
-    }
 }

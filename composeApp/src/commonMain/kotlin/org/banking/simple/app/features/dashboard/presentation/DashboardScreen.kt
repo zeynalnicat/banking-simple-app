@@ -50,17 +50,17 @@ import org.banking.simple.app.features.shared.ui.components.DSizedBox
 
 fun DashboardScreen(navController: NavController,transactionDao: TransactionDao,cardDao: CardDao){
     val repoImpl = DashboardRepositoryImpl(transactionDao,cardDao)
-    val addTransactionUseCase = AddTransactionUseCase(repoImpl)
     val getTransactionUseCase =  GetTransactionsUseCase(repoImpl)
     val getCardsUseCase = GetCardsUseCase(repoImpl)
 
-    val viewModel = viewModel{ DashboardViewModel(addTransactionUseCase,
+    val viewModel = viewModel{ DashboardViewModel(
         getTransactionUseCase,getCardsUseCase) }
     val state = viewModel.state.collectAsState().value
     LocalPreferenceProvider {
         val preference = LocalPreference.current
         LaunchedEffect(Unit) {
             viewModel.onIntent(DashboardIntent.OnGetCards(preference.getInt("userId",-1)))
+            viewModel.onIntent(DashboardIntent.OnGetTransactionHistory(preference.getInt("userId",-1)))
         }
 
         Scaffold { innerPadding ->
@@ -115,25 +115,4 @@ fun ActionItem(icon: ImageVector, label: String) {
 
 
 
-@Composable
-fun ActivityItem() {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Box(
-            modifier = Modifier
-                .size(40.dp)
-                .background(Color(0xFF181F3A), shape = RoundedCornerShape(8.dp)),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(Icons.Default.Restaurant, contentDescription = null, tint = Color.White)
-        }
-        Spacer(modifier = Modifier.width(12.dp))
-        Column(modifier = Modifier.weight(1f)) {
-            Text("Food", color = Color.Black, fontSize = 14.sp)
-            Text("15 Oct 2020", color = Color.Black.copy(alpha = 0.6f), fontSize = 12.sp)
-        }
-        Text("- \$ 40,00", color = Color.Black, fontSize = 14.sp)
-    }
-}
+

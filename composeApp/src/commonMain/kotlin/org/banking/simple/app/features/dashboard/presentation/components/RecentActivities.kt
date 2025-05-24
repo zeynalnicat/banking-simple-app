@@ -20,7 +20,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.banking.simple.app.features.dashboard.domain.models.TransactionDTO
-import org.banking.simple.app.features.dashboard.presentation.ActivityItem
 import org.banking.simple.app.features.shared.ui.components.DSizedBox
 
 @Composable
@@ -44,8 +43,8 @@ fun RecentActivities(transactions:List<TransactionDTO>) {
         )
     }else{
             LazyColumn {
-                items(5) {
-                    ActivityItem()
+                items(transactions.size) {index->
+                    TransactionItem(transactions[index])
                     DSizedBox.eightH()
                 }
             }

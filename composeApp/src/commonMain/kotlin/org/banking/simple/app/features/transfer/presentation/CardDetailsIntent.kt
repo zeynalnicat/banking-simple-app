@@ -8,4 +8,5 @@ sealed class CardDetailsIntent {
     data class OnSetTransactionType(val transactionType:String): CardDetailsIntent()
     data class OnGetCardDetails(val userId:Int, val cardId:Int): CardDetailsIntent()
     data object OnInsertTransaction: CardDetailsIntent()
+    data class OnGetTransactions(val userId:Int, val cardId:Int): CardDetailsIntent()
 }

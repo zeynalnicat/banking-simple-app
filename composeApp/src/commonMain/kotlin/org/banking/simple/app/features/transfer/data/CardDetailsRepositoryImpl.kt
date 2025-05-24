@@ -38,4 +38,16 @@ class CardDetailsRepositoryImpl(private val cardDao: CardDao,private val transac
             return Result.Error(e.message ?: "Unknown Error")
         }
     }
+
+    override suspend fun getTransactions(
+        userId: Int,
+        cardId: Int
+    ): Result<List<TransactionDTO>> {
+        try {
+            val response = transactionDao.getTransactionsDue(userId,cardId)
+            return Result.Success(response.map { it.toModel() })
+        }catch (e:Exception){
+            return Result.Error(e.message ?: "Unknown Error")
+        }
+    }
 }
