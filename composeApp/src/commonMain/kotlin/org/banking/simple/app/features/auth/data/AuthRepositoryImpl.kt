@@ -8,12 +8,8 @@ import org.banking.simple.app.features.auth.domain.UserEntity
 class AuthRepositoryImpl(private val authDao: UserDao): AuthRepository {
     override suspend fun submit(authEntity: UserEntity):Result<Int> {
         try {
-            val response = authDao.insertUser(authEntity)
-            if(response !=-1L ){
-                return Result.Success(response.toInt())
-            }
-            return Result.Error("Unknown Error occurred")
-
+            val user = authDao.loginOrInsert(authEntity)
+                return Result.Success(user.id)
         }catch (e: Exception){
             return Result.Error(e.message?: "Unknown Error Occurred")
         }

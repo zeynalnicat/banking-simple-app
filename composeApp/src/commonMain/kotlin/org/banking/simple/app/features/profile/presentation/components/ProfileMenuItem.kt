@@ -1,6 +1,7 @@
 package org.banking.app.features.profile.presentation.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -24,12 +25,16 @@ import androidx.compose.ui.unit.sp
 fun ProfileMenuItem(
     icon: androidx.compose.ui.graphics.vector.ImageVector,
     text: String,
-    iconBackgroundColor: Color
+    iconBackgroundColor: Color,
+    onClick: ()->Unit
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp),
+            .padding(horizontal = 16.dp)
+            .clickable {
+                onClick()
+            },
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(

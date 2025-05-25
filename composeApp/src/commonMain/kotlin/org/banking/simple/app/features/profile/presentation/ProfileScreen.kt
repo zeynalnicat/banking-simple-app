@@ -5,12 +5,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Headphones
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Shield
+
 
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -25,16 +23,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.cmppreference.LocalPreference
 import com.example.cmppreference.LocalPreferenceProvider
 import org.banking.app.features.profile.presentation.components.ProfileMenuItem
+import org.banking.simple.app.core.Screen
 import org.banking.simple.app.features.auth.data.UserDao
 import org.banking.simple.app.features.profile.data.ProfileRepositoryImpl
 import org.banking.simple.app.features.profile.domain.usecases.GetUserUseCase
 import org.banking.simple.app.features.shared.ui.colors.AppColors
 
 @Composable
-fun ProfileScreen(userDao: UserDao) {
+fun ProfileScreen(userDao: UserDao,navController: NavController) {
     val iconBlue = Color(0xFF5B9EFC)
 
     val repository = ProfileRepositoryImpl(userDao)
@@ -100,31 +100,8 @@ fun ProfileScreen(userDao: UserDao) {
                         ProfileMenuItem(
                             icon = Icons.Default.Person,
                             text = "Edit Profile",
-                            iconBackgroundColor = iconBlue
-                        )
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        ProfileMenuItem(
-                            icon = Icons.Default.Shield,
-                            text = "Security",
-                            iconBackgroundColor = iconBlue
-                        )
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        ProfileMenuItem(
-                            icon = Icons.Default.Settings,
-                            text = "Setting",
-                            iconBackgroundColor = iconBlue
-                        )
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        ProfileMenuItem(
-                            icon = Icons.Default.Headphones,
-                            text = "Help",
-                            iconBackgroundColor = iconBlue
+                            iconBackgroundColor = iconBlue,
+                            onClick = {}
                         )
 
                         Spacer(modifier = Modifier.height(16.dp))
@@ -132,7 +109,13 @@ fun ProfileScreen(userDao: UserDao) {
                         ProfileMenuItem(
                             icon = Icons.Default.ExitToApp,
                             text = "Logout",
-                            iconBackgroundColor = iconBlue
+                            iconBackgroundColor = iconBlue,
+                            onClick = {
+                                preference.put("userId",-1)
+                                navController.navigate(Screen.Auth.route) {
+                                    popUpTo(0) { inclusive = true }
+                                }
+                            }
                         )
 
                         Spacer(modifier = Modifier.weight(1f))
