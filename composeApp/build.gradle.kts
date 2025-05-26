@@ -43,6 +43,10 @@ kotlin {
             implementation(libs.androidx.material.icons.core)
             implementation(libs.androidx.material3)
             implementation(libs.android.driver)
+
+            implementation(project.dependencies.platform("io.insert-koin:koin-bom:3.5.4"))
+            implementation(libs.koin.core)
+            implementation(libs.koin.android)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -73,6 +77,12 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(libs.cmp.preference)
+
+
+            // koin
+            implementation(project.dependencies.platform("io.insert-koin:koin-bom:3.5.4"))
+            implementation(libs.insert.koin.koin.core)
+            implementation(libs.koin.compose)
 
         }
         commonTest.dependencies {
