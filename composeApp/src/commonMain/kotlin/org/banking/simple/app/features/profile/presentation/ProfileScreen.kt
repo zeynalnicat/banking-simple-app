@@ -31,15 +31,21 @@ import org.banking.simple.app.core.Screen
 import org.banking.simple.app.features.auth.data.UserDao
 import org.banking.simple.app.features.profile.data.ProfileRepositoryImpl
 import org.banking.simple.app.features.profile.domain.usecases.GetUserUseCase
+import org.banking.simple.app.features.profile.domain.usecases.UpdateNameUseCase
 import org.banking.simple.app.features.shared.ui.colors.AppColors
+import org.banking.simple.app.features.shared.ui.components.BankButton
+import org.banking.simple.app.features.shared.ui.components.BankTextField
+import org.banking.simple.app.features.shared.ui.components.DSizedBox
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(userDao: UserDao,navController: NavController) {
     val iconBlue = Color(0xFF5B9EFC)
 
     val repository = ProfileRepositoryImpl(userDao)
     val getUserUseCase = GetUserUseCase(repository)
-    val viewModel = viewModel{ ProfileViewModel(getUserUseCase = getUserUseCase) }
+    val updateNameUseCase = UpdateNameUseCase(repository)
+    val viewModel = viewModel{ ProfileViewModel(getUserUseCase = getUserUseCase,updateNameUseCase) }
     val state = viewModel.state.collectAsState().value
 
     LocalPreferenceProvider {
@@ -48,40 +54,54 @@ fun ProfileScreen(userDao: UserDao,navController: NavController) {
             viewModel.onIntent(ProfileIntent.OnGetUser(preference.getInt("userId",-1)))
         }
 
+
+
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(AppColors.primary)
         ) {
             Column(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             ) {
+
+                if(state.showBottomSheet){
+                    ModalBottomSheet(
+                        onDismissRequest = {viewModel.onIntent(ProfileIntent.OnShowBottomSheet)}
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(12.dp)
+                        ){
+                            Text("Change Username", fontWeight = FontWeight.Bold)
+                            DSizedBox.sixteenH()
+                            BankTextField(
+                                value = state.changedName,
+                                onValueChange = {username -> viewModel.onIntent(ProfileIntent.OnChangeUsername(username))}
+                            )
+                            DSizedBox.sixteenH()
+                            BankButton(
+                                text = "Save",
+                                onClick = {viewModel.onIntent(ProfileIntent.OnSaveToggle)}
+                            )
+                        }
+
+                    }
+                }
 
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
                         .background(Color.White)
                 ) {
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(16.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
                     ) {
                         Spacer(modifier = Modifier.height(16.dp))
 
-
-                        Box(
-                            modifier = Modifier
-                                .size(100.dp)
-                                .clip(CircleShape)
-                                .background(Color.LightGray)
-                        ) {
-
-                        }
-
-                        Spacer(modifier = Modifier.height(16.dp))
 
                         Text(
                             text = state.name,
@@ -101,7 +121,7 @@ fun ProfileScreen(userDao: UserDao,navController: NavController) {
                             icon = Icons.Default.Person,
                             text = "Edit Profile",
                             iconBackgroundColor = iconBlue,
-                            onClick = {}
+                            onClick = {viewModel.onIntent(ProfileIntent.OnShowBottomSheet)}
                         )
 
                         Spacer(modifier = Modifier.height(16.dp))

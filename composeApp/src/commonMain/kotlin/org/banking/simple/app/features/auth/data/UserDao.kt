@@ -3,6 +3,7 @@ package org.banking.simple.app.features.auth.data
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import org.banking.simple.app.features.auth.domain.UserEntity
 
 
@@ -31,6 +32,9 @@ interface UserDao {
 
     @Query("Select * from users where id=:userId")
     suspend fun getUser(userId:Int): UserEntity
+
+    @Query("Update users set name=:name where id=:userId")
+    suspend fun updateName(userId:Int,name:String): Int
 
 
 }

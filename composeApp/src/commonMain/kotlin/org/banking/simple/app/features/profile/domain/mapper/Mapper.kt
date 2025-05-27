@@ -11,6 +11,14 @@ fun UserEntity.toModel(): UserDTO{
    )
 }
 
+//fun UserDTO.toEntity(): UserEntity{
+//    return UserDTO(
+//        id = this.id,
+//        name = this.name,
+//
+//    )
+//}
+
 //fun UserDTO.toModel(): UserEntity{
 //    return UserEntity(
 //        id = this.id,
