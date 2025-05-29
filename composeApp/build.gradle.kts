@@ -8,7 +8,6 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     id("com.google.devtools.ksp")
-    kotlin("native.cocoapods")
     alias (libs.plugins.room)
 //    id("com.squareup.sqldelight") version "2.0.0"
 
@@ -36,17 +35,6 @@ kotlin {
     }
 
 
-    cocoapods {
-        version = "1.0"
-
-        summary = "Some description for the Shared Module"
-        homepage = "https://your-project-homepage.com"
-        ios.deploymentTarget = "14.1"
-
-        framework {
-            baseName = "shared"
-        }
-    }
 
     sourceSets {
         val commonMain by getting
@@ -74,46 +62,37 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.material)
 
-            implementation(libs.androidx.material.icons.extended)
+
             implementation(libs.androidx.material.icons.core)
             implementation(libs.androidx.material3)
             implementation(libs.android.driver)
-
-            implementation(libs.androidx.material.icons.extended)
-            implementation(libs.androidx.material.icons.core)
             implementation(libs.androidx.material)
-            implementation(libs.androidx.material3)
-            implementation(libs.androidx.lifecycle.viewmodel.compose)
-            implementation(libs.androidx.lifecycle.viewmodel)
-            implementation(libs.androidx.lifecycle.viewmodel)
-            implementation(libs.androidx.room.runtime)
-            implementation(libs.androidx.room.ktx)
-            implementation(libs.androidx.room.runtime.android)
-            implementation(libs.androidx.room.compiler)
-            implementation(libs.navigation)
-            implementation(libs.androidx.lifecycle.runtimeCompose)
-            implementation(libs.androidx.lifecycle.runtimeCompose)
+
+
         }
-        commonMain.dependencies {
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.material3)
-            implementation(compose.ui)
-            implementation(compose.components.resources)
-            implementation(compose.components.uiToolingPreview)
+        commonMain {
+            dependencies {
+                implementation(compose.runtime)
+                implementation(compose.foundation)
+                implementation(compose.material3)
+                implementation(compose.ui)
+                implementation(compose.components.resources)
+                implementation(compose.components.uiToolingPreview)
 
-            implementation(libs.runtime)
-            implementation(libs.sqlite.bundled)
+                implementation(libs.runtime)
+                implementation(libs.sqlite.bundled)
+                implementation(libs.androidx.room.runtime)
 
+                implementation(compose.materialIconsExtended)
+                implementation(libs.navigation)
+                implementation(libs.cmp.preference)
 
+                // Remove Android lifecycle & navigation libs here:
+                // implementation(libs.androidx.lifecycle.viewmodel.compose)
+                // implementation(libs.androidx.lifecycle.viewmodel)
 
-
-
-            implementation(libs.jetbrains.material.icons.extended)
-            implementation(compose.materialIconsExtended)
-
-            implementation(libs.cmp.preference)
-
+                // implementation(libs.androidx.lifecycle.runtimeCompose)
+            }
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
