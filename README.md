@@ -1,6 +1,7 @@
 ## App Photos
 
-<img width="920" alt="image" src="https://github.com/user-attachments/assets/3a521602-908d-434a-8dd8-16c81c104171" />
+
+![banking_app](https://github.com/user-attachments/assets/0d06ed5f-2fb6-4879-8b52-71a148c13d0c)
 
 ## Tools 
 Jetpack Compose
